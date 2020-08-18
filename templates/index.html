@@ -79,7 +79,7 @@
             const test_score = fd.get("test-score")
             const rev_score = fd.get("review-score")
 
-            fetch(`http://127.0.0.1:5000/predict?experience=${experience}&test_score=${test_score}&rev_score=${rev_score}`)
+            fetch(`https://basic-salary-predictor.herokuapp.com/predict?experience=${experience}&test_score=${test_score}&rev_score=${rev_score}`)
             .then(response => response.json())
             .then(data => {
                 
