@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic ML Deployment</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        .basic-flex{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-style{
+            width: 25%;
+            padding: 5px;
+        }
+
+        .basic-padding{
+            padding: 8px 0px;
+        }
+
+        #results{
+            font-size: 25px;
+        }
+
+        .no-results{
+            display: none;
+        }
+
+        .with-results{
+            display: inline;
+        }
+
+        button{
+            padding: 5px 20px;
+            border-radius: 5px;
+            border-color: limegreen;
+            background-color: limegreen;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Predict Applicant Salary</h1>
+    <form id ="predictors" class="basic-flex">
+        <div class="basic-flex basic-padding">
+            <label for="experience">Experience: </label>
+            <input type="text" id="experience" name="experience" class="input-style" placeholder="Years of Experience">    
+        </div>
+        <div class="basic-flex basic-padding">
+            <label for="test-score">Test Score: </label>
+            <input type="text" id="test-score" name="test-score" class="input-style" placeholder="Score on the written exam (1-10)">
+        </div>
+        <div class="basic-flex basic-padding">
+            <label for="review-score">Review Score: </label>
+            <input type="text" id="review-score" name="review-score" class="input-style" placeholder="Performance Score by the Review Board (1-10)">
+        </div>
+    </form>
+    <br>
+    <button type="submit" form="predictors" value="Submit">Submit</button> 
+
+    <br>
+    <br>
+    <div id="results" class="no-results">
+        Predicted Salary: $<span></span>
+    </div>
+    
+</body>
+<script type="text/javascript">
+        const labelBtn = document.getElementById("predictors")
+        labelBtn.onsubmit = (e) =>{
+            e.preventDefault()
+            const fd = new FormData(labelBtn)
+            const experience = fd.get("experience")
+            const test_score = fd.get("test-score")
+            const rev_score = fd.get("review-score")
+
+            fetch(`http://127.0.0.1:5000/predict?experience=${experience}&test_score=${test_score}&rev_score=${rev_score}`)
+            .then(response => response.json())
+            .then(data => {
+                
+                if(document.querySelector("#results").className == "no-results"){
+                    document.querySelector(".no-results").className = "with-results"
+                    document.querySelector("div#results span").innerHTML = data["predicted_salary"]
+                    // console.log(data["Hello"])
+                    // console.log(document.querySelector("div.with-results.basic-padding span").innerHTML)
+                }
+                else{
+                    document.querySelector("div#results span").innerHTML = data["predicted_salary"]
+                }
+                
+            })
+            
+        }
+    
+</script>
+</html>
